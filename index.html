@@ -246,50 +246,51 @@
       ["styl", "emocje", "symbol", "environment", "przeslanie"].forEach(attachLiveValidation);
     });
 
-    function generateZanpakuto() {
-      const temperament = document.getElementById('temperament').value;
-      const element = document.getElementById('element').value;
-      const combatStyle = document.getElementById('styl').value;
-      const emotions = document.getElementById('emocje').value;
-      const symbol = document.getElementById('symbol').value;
-      const environment = document.getElementById('environment').value;
-      const messageToBlade = document.getElementById('przeslanie').value;
+    async function generateZanpakuto() {
+  const temperament = document.getElementById("temperament").value;
+  const element = document.getElementById("element").value;
+  const styl = document.getElementById("styl").value;
+  const emocje = document.getElementById("emocje").value;
+  const przeslanie = document.getElementById("przeslanie").value;
+  const additional = document.getElementById("additional").value;
 
-      let valid = true;
+  // Walidacja
+  if (
+    temperament.length < 3 ||
+    element.length < 3 ||
+    styl.length < 3 ||
+    emocje.length < 3
+  ) {
+    alert("Please fill out all fields properly.");
+    return;
+  }
 
-      if (!isInputValid(combatStyle)) { setError("styl", "Please describe your combat style."); valid = false; } else clearError("styl");
-      if (!isInputValid(emotions)) { setError("emocje", "Please enter meaningful emotions."); valid = false; } else clearError("emocje");
-      if (!isInputValid(symbol)) { setError("symbol", "Please enter a symbolic element."); valid = false; } else clearError("symbol");
-      if (!isInputValid(environment)) { setError("environment", "Please describe a place."); valid = false; } else clearError("environment");
-      if (!isInputValid(messageToBlade)) { setError("przeslanie", "Say something to your Zanpakutō."); valid = false; } else clearError("przeslanie");
+  // Loader
+  document.querySelector("button").innerText = "Generating...";
+  document.querySelector("button").disabled = true;
 
-      if (!valid) return;
+  try {
+    const res = await fetch("/.netlify/functions/generateZanpakuto", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        temperament,
+        element,
+        styl,
+        emocje,
+        przeslanie,
+        additional,
+      }),
+    });
 
-      document.getElementById("loadingOverlay").classList.add("fade-in");
+    const data = await res.json();
 
-      setTimeout(() => {
-        const divisions = [
-          { name: "6th Division", rank: "Lieutenant" },
-          { name: "11th Division", rank: "Frontline Fighter" },
-          { name: "13th Division", rank: "Patrol Leader" }
-        ];
-        const rand = divisions[Math.floor(Math.random() * divisions.length)];
-
-        const result = {
-          japaneseName: "霞時雨",
-          romajiName: "Kasumi Shigure",
-          translation: "Mist & Passing Rain",
-          history: `Born in ${environment}, your Zanpakutō awakened through ${temperament} spirit and the element of ${element}.`,
-          shikai: `It channels ${element}, bending form and light through mist. You achieved Shikai by embracing ${emotions}.`,
-          bankai: `Your Bankai unleashes ${symbol}-shaped sigils of destruction. It was earned in solitude, guided by ${messageToBlade}.`,
-          appearance: `A blade reflecting ${element}, its guard formed like a ${symbol}, bound in memories of ${emotions}.`,
-          seireiteiRank: `${rand.rank}, ${rand.name}`
-        };
-
-        sessionStorage.setItem('zanpakutoResult', JSON.stringify(result));
-        window.location.href = 'result.html';;
-      }, 2500);
-    }
+    sessionStorage.setItem("zanpakutoAIResult", data.output);
+    window.location.href = "result.html";
+  } catch (err) {
+    alert("Something went wrong.");
+  }
+}
   </script>
 </body>
 </html>
