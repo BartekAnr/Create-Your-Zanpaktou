@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Your Zanpakutō</title>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;500;800&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Raleway', sans-serif;
+      background: url('background2.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #f5f5f5;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background-color: rgba(0, 0, 0, 0.65);
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 900px;
+      margin: 6% auto;
+      padding: 50px;
+      background: rgba(255, 255, 255, 0.07);
+      border-radius: 25px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.6);
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 1.8em;
+      font-weight: 500;
+      margin-bottom: 15px;
+      color: #ccc;
+    }
+
+    .zanpakuto-name {
+      text-align: center;
+      margin-top: 0;
+      margin-bottom: 5px;
+      font-size: 3em;
+      font-weight: 800;
+      color: #fff;
+    }
+
+    .translation {
+      text-align: center;
+      font-size: 1.3em;
+      font-weight: 300;
+      color: #b0c4de;
+      margin-bottom: 40px;
+    }
+
+    .section {
+      margin-bottom: 35px;
+    }
+
+    .section h2 {
+      font-size: 1.5em;
+      font-weight: 600;
+      border-bottom: 2px solid #aaa;
+      padding-bottom: 6px;
+      margin-bottom: 15px;
+    }
+
+    .section p {
+      font-size: 1.05em;
+      line-height: 1.7;
+      margin: 0 0 10px;
+    }
+
+    .italic {
+      font-style: italic;
+      color: #ccc;
+    }
+
+    .highlight {
+      color: #ffe699;
+      font-weight: bold;
+    }
+
+    #backButton {
+      position: relative;
+      z-index: 2;
+      display: block;
+      margin: 30px auto 0 auto;
+      padding: 12px 25px;
+      border: none;
+      border-radius: 8px;
+      background-color: #778899;
+      color: #fff;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1em;
+      max-width: 220px;
+      text-align: center;
+      transition: background-color 0.3s ease;
+    }
+
+    #backButton:hover {
+      background-color: #5f6f7a;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay"></div>
+  <div class="container">
+    <h1>Your Zanpakutō</h1>
+    <h2 class="zanpakuto-name" id="japaneseName">霞時雨</h2>
+    <div class="translation">
+      <span id="romajiName">Kasumi Shigure</span> – <span id="translation">"Mist & Passing Rain"</span>
+    </div>
+
+    <div class="section">
+      <h2>Shinigami’s Origin</h2>
+      <p class="italic" id="history"><!-- Dynamically inserted --></p>
+    </div>
+
+    <div class="section">
+      <h2>Shikai</h2>
+      <p><span class="highlight">Name:</span> <span id="shikaiName">Kasumi Shigure</span> – "Mist & Passing Rain"</p>
+      <p><span class="highlight">Form & Ability:</span> <span id="shikai"></span></p>
+    </div>
+
+    <div class="section">
+      <h2>Bankai</h2>
+      <p><span class="highlight">Name:</span> <span id="bankaiName">Kasumi Shigure</span> – "Mist & Passing Rain"</p>
+      <p><span class="highlight">Power Unleashed:</span> <span id="bankai"></span></p>
+    </div>
+
+    <div class="section">
+      <h2>Blade & Scabbard Appearance</h2>
+      <p id="appearance"><!-- Dynamically inserted --></p>
+    </div>
+
+    <div class="section">
+      <h2>Division & Rank</h2>
+      <p id="seireiteiRank"><!-- Filled dynamically --></p>
+      <p id="divisionDescription"><!-- Specialization and explanation filled dynamically --></p>
+    </div>
+
+    <button id="backButton" onclick="goBack()">← Return to Main Page</button>
+  </div>
+
+  <script>
+    function goBack() {
+      window.location.href = 'index.html';
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      const data = JSON.parse(sessionStorage.getItem('zanpakutoResult'));
+
+      if (!data) {
+        alert("No Zanpakutō data found. Returning to main page.");
+        window.location.href = 'index.html';
+        return;
+      }
+
+      document.getElementById('japaneseName').textContent = data.japaneseName;
+      document.getElementById('romajiName').textContent = data.romajiName;
+      document.getElementById('translation').textContent = `"${data.translation}"`;
+      document.getElementById('history').textContent = data.history;
+      document.getElementById('shikai').textContent = data.shikai;
+      document.getElementById('bankai').textContent = data.bankai;
+      document.getElementById('appearance').textContent = data.appearance;
+      document.getElementById('seireiteiRank').textContent = `You currently hold the rank of ${data.seireiteiRank}.`;
+
+      const divisionSpecializations = {
+        "1st Division": "Administrative leadership and command over other divisions.",
+        "2nd Division": "Assassination and covert operations (also leads the Onmitsukidō).",
+        "3rd Division": "Special tactics and high discipline.",
+        "4th Division": "Medical and supply support across Soul Society.",
+        "5th Division": "Balanced general service with spiritual stability.",
+        "6th Division": "Tradition, honor, and noble enforcement.",
+        "7th Division": "Frontline patrol and wide-area engagement.",
+        "8th Division": "Flexibility, support, and field command.",
+        "9th Division": "Internal affairs, discipline, and spiritual archives.",
+        "10th Division": "Combat readiness and swift tactical response.",
+        "11th Division": "Close-range combat and brute force.",
+        "12th Division": "Scientific research and technological development.",
+        "13th Division": "Defense of the spiritual realm and outer sectors."
+      };
+
+      const divisionName = data.seireiteiRank.split(",")[1]?.trim();
+      const specialization = divisionSpecializations[divisionName] || "Unknown division specialization.";
+
+      document.getElementById('divisionDescription').textContent =
+        `The ${divisionName} specializes in ${specialization}. Based on your Zanpakutō's nature and combat style, you have proven yourself fit for this squad, where you also fulfill a unique duty based on your spirit.`;
+    });
+  </script>
+</body>
+</html>

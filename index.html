@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Forge Your Zanpakutō</title>
+  <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@300;500;800&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Raleway', sans-serif;
+      background: url('background2.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #f5f5f5;
+    }
+
+    .overlay {
+      background-color: rgba(0, 0, 0, 0.6);
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      z-index: 0;
+    }
+
+    .container {
+      position: relative;
+      z-index: 1;
+      max-width: 700px;
+      margin: 5% auto;
+      padding: 40px;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 20px;
+      backdrop-filter: blur(10px);
+      box-shadow: 0 0 30px rgba(0, 0, 0, 0.4);
+    }
+
+    h1 {
+      text-align: center;
+      font-weight: 800;
+      font-size: 2.5em;
+      margin-bottom: 10px;
+    }
+
+    p.description {
+      text-align: center;
+      font-weight: 300;
+      font-size: 1.1em;
+      margin-bottom: 30px;
+    }
+
+    .input-group {
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      font-size: 1em;
+      background-color: rgba(255, 255, 255, 0.1);
+      color: #f5f5f5;
+      outline: none;
+    }
+
+    input::placeholder, textarea::placeholder {
+      color: #ccc;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      border-radius: 10px;
+      background-color: #778899;
+      color: #fff;
+      font-size: 1.2em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #5f6f7a;
+    }
+
+    .error {
+      border: 2px solid #ff5c5c !important;
+      background-color: rgba(255, 0, 0, 0.1);
+    }
+
+    .error-message {
+      color: #ffaaaa;
+      font-size: 0.85em;
+      margin-top: 4px;
+    }
+
+    #loadingOverlay {
+      display: none;
+      position: fixed;
+      z-index: 9999;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: rgba(0, 0, 0, 0.85);
+      color: #f0f0f0;
+      font-size: 1.8em;
+      font-weight: 500;
+      text-align: center;
+      padding-top: 25%;
+      backdrop-filter: blur(4px);
+    }
+
+    #loadingOverlay.fade-in {
+      display: block;
+      opacity: 1;
+    }
+
+    .spinner {
+      margin: 20px auto;
+      width: 50px;
+      height: 50px;
+      border: 6px solid #ccc;
+      border-top-color: #f5f5f5;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay"></div>
+  <div class="container">
+    <h1>Forge Your Zanpakutō</h1>
+    <p class="description">Answer a few questions and let the spirit of your blade emerge from within.</p>
+
+    <div class="input-group">
+      <label for="temperament">Temperament</label>
+      <select id="temperament">
+        <option value="calm">Calm and withdrawn</option>
+        <option value="emotional">Emotional and shifting</option>
+        <option value="cold">Cold and analytical</option>
+        <option value="proud">Proud and combative</option>
+        <option value="playful">Playful and mischievous</option>
+        <option value="melancholic">Melancholic and reflective</option>
+      </select>
+    </div>
+
+    <div class="input-group">
+      <label for="element">Elemental Affinity</label>
+      <select id="element">
+        <option value="wind">Wind</option>
+        <option value="water">Water</option>
+        <option value="fire">Fire</option>
+        <option value="ice">Ice</option>
+        <option value="shadow">Shadow</option>
+        <option value="lightning">Lightning</option>
+        <option value="earth">Earth</option>
+        <option value="void">Void</option>
+      </select>
+    </div>
+
+    <div class="input-group">
+      <label for="styl">Describe your combat style</label>
+      <input type="text" id="styl" placeholder="e.g. fast, unpredictable, ranged" />
+    </div>
+
+    <div class="input-group">
+      <label for="emocje">Which emotions define you?</label>
+      <input type="text" id="emocje" placeholder="e.g. nostalgia, rage, serenity" />
+    </div>
+
+    <div class="input-group">
+      <label for="symbol">A symbolic animal or object</label>
+      <input type="text" id="symbol" placeholder="e.g. raven, mirror, lotus" />
+    </div>
+
+    <div class="input-group">
+      <label for="environment">Where does your Zanpakutō spirit dwell?</label>
+      <input type="text" id="environment" placeholder="e.g. snowy mountain, ruined temple" />
+    </div>
+
+    <div class="input-group">
+      <label for="przeslanie">What would you say to your blade?</label>
+      <textarea id="przeslanie" rows="3" placeholder="A personal message..."></textarea>
+    </div>
+
+    <button onclick="generateZanpakuto()">Forge My Zanpakutō</button>
+  </div>
+
+  <div id="loadingOverlay">
+    Generating your Zanpakutō...
+    <div class="spinner"></div>
+  </div>
+
+  <script>
+    function isInputValid(input) {
+      const trimmed = input.trim();
+      return (
+        trimmed.length >= 3 &&
+        /[a-zA-Z]/.test(trimmed) &&
+        !/^[^a-zA-Z0-9]+$/.test(trimmed)
+      );
+    }
+
+    function setError(id, message) {
+      const field = document.getElementById(id);
+      field.classList.add("error");
+
+      let existing = field.nextElementSibling;
+      if (!existing || !existing.classList.contains("error-message")) {
+        const msg = document.createElement("div");
+        msg.classList.add("error-message");
+        msg.textContent = message;
+        field.parentNode.insertBefore(msg, field.nextSibling);
+      }
+    }
+
+    function clearError(id) {
+      const field = document.getElementById(id);
+      field.classList.remove("error");
+
+      let existing = field.nextElementSibling;
+      if (existing && existing.classList.contains("error-message")) {
+        existing.remove();
+      }
+    }
+
+    function attachLiveValidation(id) {
+      const field = document.getElementById(id);
+      field.addEventListener("input", () => {
+        if (isInputValid(field.value)) {
+          clearError(id);
+        }
+      });
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      ["styl", "emocje", "symbol", "environment", "przeslanie"].forEach(attachLiveValidation);
+    });
+
+    function generateZanpakuto() {
+      const temperament = document.getElementById('temperament').value;
+      const element = document.getElementById('element').value;
+      const combatStyle = document.getElementById('styl').value;
+      const emotions = document.getElementById('emocje').value;
+      const symbol = document.getElementById('symbol').value;
+      const environment = document.getElementById('environment').value;
+      const messageToBlade = document.getElementById('przeslanie').value;
+
+      let valid = true;
+
+      if (!isInputValid(combatStyle)) { setError("styl", "Please describe your combat style."); valid = false; } else clearError("styl");
+      if (!isInputValid(emotions)) { setError("emocje", "Please enter meaningful emotions."); valid = false; } else clearError("emocje");
+      if (!isInputValid(symbol)) { setError("symbol", "Please enter a symbolic element."); valid = false; } else clearError("symbol");
+      if (!isInputValid(environment)) { setError("environment", "Please describe a place."); valid = false; } else clearError("environment");
+      if (!isInputValid(messageToBlade)) { setError("przeslanie", "Say something to your Zanpakutō."); valid = false; } else clearError("przeslanie");
+
+      if (!valid) return;
+
+      document.getElementById("loadingOverlay").classList.add("fade-in");
+
+      setTimeout(() => {
+        const divisions = [
+          { name: "6th Division", rank: "Lieutenant" },
+          { name: "11th Division", rank: "Frontline Fighter" },
+          { name: "13th Division", rank: "Patrol Leader" }
+        ];
+        const rand = divisions[Math.floor(Math.random() * divisions.length)];
+
+        const result = {
+          japaneseName: "霞時雨",
+          romajiName: "Kasumi Shigure",
+          translation: "Mist & Passing Rain",
+          history: `Born in ${environment}, your Zanpakutō awakened through ${temperament} spirit and the element of ${element}.`,
+          shikai: `It channels ${element}, bending form and light through mist. You achieved Shikai by embracing ${emotions}.`,
+          bankai: `Your Bankai unleashes ${symbol}-shaped sigils of destruction. It was earned in solitude, guided by ${messageToBlade}.`,
+          appearance: `A blade reflecting ${element}, its guard formed like a ${symbol}, bound in memories of ${emotions}.`,
+          seireiteiRank: `${rand.rank}, ${rand.name}`
+        };
+
+        sessionStorage.setItem('zanpakutoResult', JSON.stringify(result));
+        window.location.href = 'result.html';;
+      }, 2500);
+    }
+  </script>
+</body>
+</html>
