@@ -117,59 +117,72 @@
   <div class="overlay"></div>
   <div class="container">
     <h1>Your Zanpakutō</h1>
-    <h2 class="zanpakuto-name" id="japaneseName">霞時雨</h2>
+
+    <h2 class="zanpakuto-name" id="japaneseName"></h2>
     <div class="translation">
-      <span id="romajiName">Kasumi Shigure</span> – <span id="translation">"Mist & Passing Rain"</span>
+      <span id="romajiName"></span> – <span id="translation"></span>
     </div>
 
     <div class="section">
       <h2>Shinigami’s Origin</h2>
-      <p class="italic" id="history"><!-- Dynamically inserted --></p>
+      <p class="italic" id="history"></p>
     </div>
 
     <div class="section">
       <h2>Shikai</h2>
-      <p><span class="highlight">Name:</span> <span id="shikaiName">Kasumi Shigure</span> – "Mist & Passing Rain"</p>
-      <p><span class="highlight">Form & Ability:</span> <span id="shikai"></span></p>
+      <p><strong>Name:</strong> <span id="shikaiName"></span></p>
+      <p><strong>Form & Ability:</strong> <span id="shikai"></span></p>
     </div>
 
     <div class="section">
       <h2>Bankai</h2>
-      <p><span class="highlight">Name:</span> <span id="bankaiName">Kasumi Shigure</span> – "Mist & Passing Rain"</p>
-      <p><span class="highlight">Power Unleashed:</span> <span id="bankai"></span></p>
+      <p><strong>Name:</strong> <span id="bankaiName"></span></p>
+      <p><strong>Power Unleashed:</strong> <span id="bankai"></span></p>
     </div>
 
     <div class="section">
       <h2>Blade & Scabbard Appearance</h2>
-      <p id="appearance"><!-- Dynamically inserted --></p>
+      <p id="appearance"></p>
     </div>
 
     <div class="section">
       <h2>Division & Rank</h2>
-      <p id="seireiteiRank"><!-- Filled dynamically --></p>
-      <p id="divisionDescription"><!-- Specialization and explanation filled dynamically --></p>
+      <p id="seireiteiRank"></p>
+      <p id="divisionDescription"></p>
     </div>
 
     <button id="backButton" onclick="goBack()">← Return to Main Page</button>
   </div>
 
   <script>
-  const result = sessionStorage.getItem("zanpakutoAIResult");
-  if (!result) {
-    document.body.innerHTML = "<h2 style='color:white;text-align:center;'>No result found.</h2>";
-  } else {
-    const container = document.querySelector(".container");
-    const lines = result.split("\n").filter(l => l.trim() !== "");
-    lines.forEach(line => {
-      const p = document.createElement("p");
-      p.innerHTML = line;
-      container.appendChild(p);
-    });
-  }
+    function goBack() {
+      window.location.href = 'index.html';
+    }
 
-  function goBack() {
-    window.location.href = 'index.html';
-  }
-</script>
+    const result = sessionStorage.getItem("zanpakutoAIResult");
+
+    if (!result) {
+      document.body.innerHTML = "<h2 style='color:white;text-align:center;'>No result found.</h2>";
+    } else {
+      try {
+        const data = JSON.parse(result);
+
+        document.getElementById('japaneseName').textContent = data.japaneseName || '';
+        document.getElementById('romajiName').textContent = data.romajiName || '';
+        document.getElementById('translation').textContent = data.translation || '';
+        document.getElementById('history').textContent = data.history || '';
+        document.getElementById('shikaiName').textContent = data.shikai?.name || '';
+        document.getElementById('shikai').textContent = data.shikai?.description || '';
+        document.getElementById('bankaiName').textContent = data.bankai?.name || '';
+        document.getElementById('bankai').textContent = data.bankai?.description || '';
+        document.getElementById('appearance').textContent = data.appearance || '';
+        document.getElementById('seireiteiRank').textContent = data.seireiteiRank || '';
+        document.getElementById('divisionDescription').textContent = data.divisionDescription || '';
+      } catch (e) {
+        document.body.innerHTML = "<h2 style='color:white;text-align:center;'>Result parsing error.</h2>";
+        console.error('Parsing result failed:', e);
+      }
+    }
+  </script>
 </body>
 </html>
