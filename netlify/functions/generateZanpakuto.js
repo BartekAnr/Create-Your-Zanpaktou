@@ -17,7 +17,7 @@ japaneseName, romajiName, translation, history, shikai, bankai, appearance, seir
 `;
 
     // Wywołanie API HuggingFace - podmień 'your-model' na wybrany model
-    const response = await fetch('https://api-inference.huggingface.co/models/EleutherAI/gpt-neo-125M', {
+    const response = await fetch('https://api-inference.huggingface.co/models/Gemma/Gemma-2-9B-Instruct', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${process.env.HUGGINGFACE_API_KEY}`,
