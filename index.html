@@ -18,7 +18,10 @@
     .overlay {
       background-color: rgba(0, 0, 0, 0.6);
       position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       z-index: 0;
     }
 
@@ -69,8 +72,9 @@
       outline: none;
     }
 
-    input::placeholder, textarea::placeholder {
-      color: #ccc;
+    input::placeholder,
+    textarea::placeholder {
+      color: #cccccc;
     }
 
     button {
@@ -89,72 +93,30 @@
     button:hover {
       background-color: #5f6f7a;
     }
-
-    .error {
-      border: 2px solid #ff5c5c !important;
-      background-color: rgba(255, 0, 0, 0.1);
-    }
-
-    .error-message {
-      color: #ffaaaa;
-      font-size: 0.85em;
-      margin-top: 4px;
-    }
-
-    #loadingOverlay {
-      display: none;
-      position: fixed;
-      z-index: 9999;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: rgba(0, 0, 0, 0.85);
-      color: #f0f0f0;
-      font-size: 1.8em;
-      font-weight: 500;
-      text-align: center;
-      padding-top: 25%;
-      backdrop-filter: blur(4px);
-    }
-
-    #loadingOverlay.fade-in {
-      display: block;
-      opacity: 1;
-    }
-
-    .spinner {
-      margin: 20px auto;
-      width: 50px;
-      height: 50px;
-      border: 6px solid #ccc;
-      border-top-color: #f5f5f5;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-    }
-
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
   </style>
 </head>
 <body>
   <div class="overlay"></div>
   <div class="container">
     <h1>Forge Your Zanpakutō</h1>
-    <p class="description">Answer a few questions and let the spirit of your blade emerge from within.</p>
+    <p class="description">Fill in the details and AI will forge your unique soul blade – name, story, powers and all.</p>
 
     <div class="input-group">
-      <label for="temperament">Temperament</label>
+      <label for="temperament">Your Temperament</label>
       <select id="temperament">
-        <option value="calm">Calm and withdrawn</option>
-        <option value="emotional">Emotional and shifting</option>
+        <option value="calm">Calm and introspective</option>
+        <option value="emotional">Emotional and unpredictable</option>
         <option value="cold">Cold and analytical</option>
-        <option value="proud">Proud and combative</option>
+        <option value="aggressive">Aggressive and proud</option>
         <option value="playful">Playful and mischievous</option>
-        <option value="melancholic">Melancholic and reflective</option>
+        <option value="stoic">Stoic and duty-driven</option>
+        <option value="chaotic">Chaotic and wild</option>
+        <option value="just">Righteous and justice-seeking</option>
       </select>
     </div>
 
     <div class="input-group">
-      <label for="element">Elemental Affinity</label>
+      <label for="element">Element You Resonate With</label>
       <select id="element">
         <option value="wind">Wind</option>
         <option value="water">Water</option>
@@ -163,134 +125,77 @@
         <option value="shadow">Shadow</option>
         <option value="lightning">Lightning</option>
         <option value="earth">Earth</option>
+        <option value="light">Light</option>
         <option value="void">Void</option>
       </select>
     </div>
 
     <div class="input-group">
-      <label for="styl">Describe your combat style</label>
-      <input type="text" id="styl" placeholder="e.g. fast, unpredictable, ranged" />
+      <label for="styl">Your Fighting Style</label>
+      <input type="text" id="styl" placeholder="e.g. fast, unpredictable, long-range" />
     </div>
 
     <div class="input-group">
-      <label for="emocje">Which emotions define you?</label>
-      <input type="text" id="emocje" placeholder="e.g. nostalgia, rage, serenity" />
+      <label for="emocje">Emotions Closest to You</label>
+      <input type="text" id="emocje" placeholder="e.g. rage, serenity, longing" />
     </div>
 
     <div class="input-group">
-      <label for="symbol">A symbolic animal or object</label>
-      <input type="text" id="symbol" placeholder="e.g. raven, mirror, lotus" />
+      <label for="przeslanie">What would you say to your Zanpakutō?</label>
+      <textarea id="przeslanie" rows="3" placeholder="Write something heartfelt..."></textarea>
     </div>
 
     <div class="input-group">
-      <label for="environment">Where does your Zanpakutō spirit dwell?</label>
-      <input type="text" id="environment" placeholder="e.g. snowy mountain, ruined temple" />
+      <label for="additional">Anything else the AI should know?</label>
+      <textarea id="additional" rows="3" placeholder="e.g. A traumatic past, noble heritage, special battle scar, etc."></textarea>
     </div>
 
-    <div class="input-group">
-      <label for="przeslanie">What would you say to your blade?</label>
-      <textarea id="przeslanie" rows="3" placeholder="A personal message..."></textarea>
-    </div>
-
-    <button onclick="generateZanpakuto()">Forge My Zanpakutō</button>
-  </div>
-
-  <div id="loadingOverlay">
-    Generating your Zanpakutō...
-    <div class="spinner"></div>
+    <button onclick="generateZanpakuto()">Forge my Zanpakutō</button>
   </div>
 
   <script>
-    function isInputValid(input) {
-      const trimmed = input.trim();
-      return (
-        trimmed.length >= 3 &&
-        /[a-zA-Z]/.test(trimmed) &&
-        !/^[^a-zA-Z0-9]+$/.test(trimmed)
-      );
-    }
-
-    function setError(id, message) {
-      const field = document.getElementById(id);
-      field.classList.add("error");
-
-      let existing = field.nextElementSibling;
-      if (!existing || !existing.classList.contains("error-message")) {
-        const msg = document.createElement("div");
-        msg.classList.add("error-message");
-        msg.textContent = message;
-        field.parentNode.insertBefore(msg, field.nextSibling);
-      }
-    }
-
-    function clearError(id) {
-      const field = document.getElementById(id);
-      field.classList.remove("error");
-
-      let existing = field.nextElementSibling;
-      if (existing && existing.classList.contains("error-message")) {
-        existing.remove();
-      }
-    }
-
-    function attachLiveValidation(id) {
-      const field = document.getElementById(id);
-      field.addEventListener("input", () => {
-        if (isInputValid(field.value)) {
-          clearError(id);
-        }
-      });
-    }
-
-    window.addEventListener("DOMContentLoaded", () => {
-      ["styl", "emocje", "symbol", "environment", "przeslanie"].forEach(attachLiveValidation);
-    });
-
     async function generateZanpakuto() {
-  const temperament = document.getElementById("temperament").value;
-  const element = document.getElementById("element").value;
-  const styl = document.getElementById("styl").value;
-  const emocje = document.getElementById("emocje").value;
-  const przeslanie = document.getElementById("przeslanie").value;
-  const additional = document.getElementById("additional").value;
+      const temperament = document.getElementById("temperament").value;
+      const element = document.getElementById("element").value;
+      const styl = document.getElementById("styl").value;
+      const emocje = document.getElementById("emocje").value;
+      const przeslanie = document.getElementById("przeslanie").value;
+      const additional = document.getElementById("additional").value;
 
-  // Walidacja
-  if (
-    temperament.length < 3 ||
-    element.length < 3 ||
-    styl.length < 3 ||
-    emocje.length < 3
-  ) {
-    alert("Please fill out all fields properly.");
-    return;
-  }
+      if (
+        temperament.length < 3 ||
+        element.length < 3 ||
+        styl.length < 3 ||
+        emocje.length < 3
+      ) {
+        alert("Please fill out all fields properly.");
+        return;
+      }
 
-  // Loader
-  document.querySelector("button").innerText = "Generating...";
-  document.querySelector("button").disabled = true;
+      document.querySelector("button").innerText = "Generating...";
+      document.querySelector("button").disabled = true;
 
-  try {
-    const res = await fetch("/.netlify/functions/generateZanpakuto", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        temperament,
-        element,
-        styl,
-        emocje,
-        przeslanie,
-        additional,
-      }),
-    });
+      try {
+        const res = await fetch("/.netlify/functions/generateZanpakuto", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            temperament,
+            element,
+            styl,
+            emocje,
+            przeslanie,
+            additional
+          }),
+        });
 
-    const data = await res.json();
-
-    sessionStorage.setItem("zanpakutoAIResult", data.output);
-    window.location.href = "result.html";
-  } catch (err) {
-    alert("Something went wrong.");
-  }
-}
+        const data = await res.json();
+        sessionStorage.setItem("zanpakutoAIResult", data.output);
+        window.location.href = "result.html";
+      } catch (err) {
+        alert("Something went wrong.");
+      }
+    }
   </script>
 </body>
 </html>
