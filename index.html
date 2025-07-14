@@ -185,13 +185,16 @@
       try {
         const response = await fetch("/.netlify/functions/generateZanpakuto", {
           method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
           body: JSON.stringify({ temperament, element, styl, emocje, przeslanie, additional })
         });
 
         if (!response.ok) throw new Error("Generation failed.");
 
         const data = await response.json();
-        sessionStorage.setItem("zanpakutoResult", JSON.stringify(data));
+        sessionStorage.setItem("zanpakutoAIResult", data.result);
         window.location.href = "result.html";
       } catch (error) {
         alert("Something went wrong. Please try again later.");
