@@ -67,14 +67,19 @@
       border-radius: 10px;
       border: none;
       font-size: 1em;
-      background-color: rgba(255, 255, 255, 0.1);
+      background-color: rgba(255, 255, 255, 0.15);
       color: #f5f5f5;
       outline: none;
     }
 
+    select option {
+      color: #000;
+      background: #fff;
+    }
+
     input::placeholder,
     textarea::placeholder {
-      color: #cccccc;
+      color: rgba(245, 245, 245, 0.7);
     }
 
     button {
@@ -93,30 +98,37 @@
     button:hover {
       background-color: #5f6f7a;
     }
+
+    #loading {
+      display: none;
+      text-align: center;
+      margin-top: 20px;
+      font-size: 1.2em;
+    }
   </style>
 </head>
 <body>
   <div class="overlay"></div>
   <div class="container">
     <h1>Forge Your Zanpakutō</h1>
-    <p class="description">Fill in the details and AI will forge your unique soul blade – name, story, powers and all.</p>
+    <p class="description">Answer the questions below to generate your unique Zanpakutō with its name, story, and power.</p>
 
     <div class="input-group">
       <label for="temperament">Your Temperament</label>
       <select id="temperament">
-        <option value="calm">Calm and introspective</option>
-        <option value="emotional">Emotional and unpredictable</option>
+        <option value="calm">Calm and withdrawn</option>
+        <option value="emotional">Emotional and changeable</option>
         <option value="cold">Cold and analytical</option>
-        <option value="aggressive">Aggressive and proud</option>
+        <option value="proud">Proud and combative</option>
         <option value="playful">Playful and mischievous</option>
-        <option value="stoic">Stoic and duty-driven</option>
-        <option value="chaotic">Chaotic and wild</option>
-        <option value="just">Righteous and justice-seeking</option>
+        <option value="stoic">Stoic and quiet</option>
+        <option value="aggressive">Aggressive and relentless</option>
+        <option value="compassionate">Compassionate and selfless</option>
       </select>
     </div>
 
     <div class="input-group">
-      <label for="element">Element You Resonate With</label>
+      <label for="element">Your Element</label>
       <select id="element">
         <option value="wind">Wind</option>
         <option value="water">Water</option>
@@ -125,75 +137,67 @@
         <option value="shadow">Shadow</option>
         <option value="lightning">Lightning</option>
         <option value="earth">Earth</option>
-        <option value="light">Light</option>
+        <option value="mist">Mist</option>
         <option value="void">Void</option>
       </select>
     </div>
 
     <div class="input-group">
-      <label for="styl">Your Fighting Style</label>
-      <input type="text" id="styl" placeholder="e.g. fast, unpredictable, long-range" />
+      <label for="styl">Describe your fighting style</label>
+      <input type="text" id="styl" placeholder="e.g. unpredictable, fast, close-range..." />
     </div>
 
     <div class="input-group">
-      <label for="emocje">Emotions Closest to You</label>
-      <input type="text" id="emocje" placeholder="e.g. rage, serenity, longing" />
+      <label for="emocje">Core Emotions</label>
+      <input type="text" id="emocje" placeholder="e.g. serenity, rage, nostalgia..." />
     </div>
 
     <div class="input-group">
       <label for="przeslanie">What would you say to your Zanpakutō?</label>
-      <textarea id="przeslanie" rows="3" placeholder="Write something heartfelt..."></textarea>
+      <textarea id="przeslanie" rows="3" placeholder="Write a personal message to your spirit blade..."></textarea>
     </div>
 
     <div class="input-group">
-      <label for="additional">Anything else the AI should know?</label>
-      <textarea id="additional" rows="3" placeholder="e.g. A traumatic past, noble heritage, special battle scar, etc."></textarea>
+      <label for="additional">Anything else we should know?</label>
+      <textarea id="additional" rows="3" placeholder="Any background info or personal traits..."></textarea>
     </div>
 
-    <button onclick="generateZanpakuto()">Forge my Zanpakutō</button>
+    <button onclick="generateZanpakuto()">Forge My Zanpakutō</button>
+    <div id="loading">Forging your Zanpakutō...</div>
   </div>
 
   <script>
     async function generateZanpakuto() {
-      const temperament = document.getElementById("temperament").value;
-      const element = document.getElementById("element").value;
-      const styl = document.getElementById("styl").value;
-      const emocje = document.getElementById("emocje").value;
-      const przeslanie = document.getElementById("przeslanie").value;
-      const additional = document.getElementById("additional").value;
+      const temperament = document.getElementById('temperament').value;
+      const element = document.getElementById('element').value;
+      const styl = document.getElementById('styl').value.trim();
+      const emocje = document.getElementById('emocje').value.trim();
+      const przeslanie = document.getElementById('przeslanie').value.trim();
+      const additional = document.getElementById('additional').value.trim();
 
-      if (
-        temperament.length < 3 ||
-        element.length < 3 ||
-        styl.length < 3 ||
-        emocje.length < 3
-      ) {
-        alert("Please fill out all fields properly.");
+      if ([styl, emocje, przeslanie].some(v => v.length < 3)) {
+        alert('Please provide more detailed answers in the input fields.');
         return;
       }
 
-      document.querySelector("button").innerText = "Generating...";
-      document.querySelector("button").disabled = true;
+      document.getElementById('loading').style.display = 'block';
 
       try {
-        const res = await fetch("/.netlify/functions/generateZanpakuto", {
+        const response = await fetch("/.netlify/functions/generateZanpakuto", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            temperament,
-            element,
-            styl,
-            emocje,
-            przeslanie,
-            additional
-          }),
+          body: JSON.stringify({ temperament, element, styl, emocje, przeslanie, additional })
         });
 
-        const data = await res.json();
-        sessionStorage.setItem("zanpakutoAIResult", data.output);
+        if (!response.ok) throw new Error("Generation failed.");
+
+        const data = await response.json();
+        sessionStorage.setItem("zanpakutoResult", JSON.stringify(data));
         window.location.href = "result.html";
-      } catch (err) {
-        alert("Something went wrong.");
+      } catch (error) {
+        alert("Something went wrong. Please try again later.");
+        console.error(error);
+      } finally {
+        document.getElementById('loading').style.display = 'none';
       }
     }
   </script>
