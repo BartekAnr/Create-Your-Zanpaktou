@@ -154,50 +154,22 @@
   </div>
 
   <script>
-    function goBack() {
-      window.location.href = 'index.html';
-    }
-
-    window.addEventListener('DOMContentLoaded', () => {
-      const data = JSON.parse(sessionStorage.getItem('zanpakutoResult'));
-
-      if (!data) {
-        alert("No Zanpakutō data found. Returning to main page.");
-        window.location.href = 'index.html';
-        return;
-      }
-
-      document.getElementById('japaneseName').textContent = data.japaneseName;
-      document.getElementById('romajiName').textContent = data.romajiName;
-      document.getElementById('translation').textContent = `"${data.translation}"`;
-      document.getElementById('history').textContent = data.history;
-      document.getElementById('shikai').textContent = data.shikai;
-      document.getElementById('bankai').textContent = data.bankai;
-      document.getElementById('appearance').textContent = data.appearance;
-      document.getElementById('seireiteiRank').textContent = `You currently hold the rank of ${data.seireiteiRank}.`;
-
-      const divisionSpecializations = {
-        "1st Division": "Administrative leadership and command over other divisions.",
-        "2nd Division": "Assassination and covert operations (also leads the Onmitsukidō).",
-        "3rd Division": "Special tactics and high discipline.",
-        "4th Division": "Medical and supply support across Soul Society.",
-        "5th Division": "Balanced general service with spiritual stability.",
-        "6th Division": "Tradition, honor, and noble enforcement.",
-        "7th Division": "Frontline patrol and wide-area engagement.",
-        "8th Division": "Flexibility, support, and field command.",
-        "9th Division": "Internal affairs, discipline, and spiritual archives.",
-        "10th Division": "Combat readiness and swift tactical response.",
-        "11th Division": "Close-range combat and brute force.",
-        "12th Division": "Scientific research and technological development.",
-        "13th Division": "Defense of the spiritual realm and outer sectors."
-      };
-
-      const divisionName = data.seireiteiRank.split(",")[1]?.trim();
-      const specialization = divisionSpecializations[divisionName] || "Unknown division specialization.";
-
-      document.getElementById('divisionDescription').textContent =
-        `The ${divisionName} specializes in ${specialization}. Based on your Zanpakutō's nature and combat style, you have proven yourself fit for this squad, where you also fulfill a unique duty based on your spirit.`;
+  const result = sessionStorage.getItem("zanpakutoAIResult");
+  if (!result) {
+    document.body.innerHTML = "<h2 style='color:white;text-align:center;'>No result found.</h2>";
+  } else {
+    const container = document.querySelector(".container");
+    const lines = result.split("\n").filter(l => l.trim() !== "");
+    lines.forEach(line => {
+      const p = document.createElement("p");
+      p.innerHTML = line;
+      container.appendChild(p);
     });
-  </script>
+  }
+
+  function goBack() {
+    window.location.href = 'index.html';
+  }
+</script>
 </body>
 </html>
