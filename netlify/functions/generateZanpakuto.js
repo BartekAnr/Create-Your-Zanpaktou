@@ -44,4 +44,23 @@ japaneseName, romajiName, translation, history, shikai, bankai, appearance, seir
     if (Array.isArray(data) && data.length > 0 && data[0].generated_text) {
       generatedText = data[0].generated_text;
     } else if (data.generated_text) {
-      generated
+      generatedText = data.generated_text;
+    } else {
+      generatedText = JSON.stringify(data);
+    }
+
+    // Upewnij się, że zwracasz wygenerowany tekst w formacie JSON (tekstowy string JSON)
+    // jeśli model nie zwraca JSONa, to trzeba by go parsować lub odpowiednio formatować.
+
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ result: generatedText }),
+    };
+  } catch (error) {
+    console.error('Function error:', error);
+    return {
+      statusCode: 500,
+      body: JSON.stringify({ error: 'Internal Server Error' }),
+    };
+  }
+};
