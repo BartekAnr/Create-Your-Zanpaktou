@@ -17,7 +17,7 @@ Return JSON with keys:
 japaneseName, romajiName, translation, history, shikai, bankai, appearance, seireiteiRank, divisionDescription
 `;
 
-    const response = await fetch('https://api-inference.huggingface.co/models/openai-community/gpt2', {
+    const response = await fetch('https://api-inference.huggingface.co/models/meta-llama/Llama-3.3-70B-Instruct', {
       method: 'POST',
       headers: {
         'Authorization': `Bearer ${process.env.HUGGINGFACE_API_KEY}`,
